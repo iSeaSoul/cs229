@@ -16,14 +16,15 @@ int main() {
         [](double x) { return x * (1 - x); }
     );
 
-    nn.create(3, std::vector<int>{3}, 2);
+    nn.create(3, std::vector<int>{4, 3}, 2);
     test_query(nn);
 
     nn.add_training_data(std::vector<int>{0}, std::vector<int>{0});
     nn.add_training_data(std::vector<int>{0, 1}, std::vector<int>{0});
-    nn.add_training_data(std::vector<int>{1, 2}, std::vector<int>{1});
+    nn.add_training_data(std::vector<int>{0, 2}, std::vector<int>{0});
+    nn.add_training_data(std::vector<int>{1}, std::vector<int>{0});
     nn.add_training_data(std::vector<int>{2}, std::vector<int>{1});
-    nn.add_training_data(std::vector<int>{0, 1, 2}, std::vector<int>{1});
+    // nn.add_training_data(std::vector<int>{0, 1, 2}, std::vector<int>{1});
 
     for (int tms = 0; tms < 10000; ++tms)   {
         nn.train();

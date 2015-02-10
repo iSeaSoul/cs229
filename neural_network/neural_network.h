@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <algorithm>
 #include <iostream>
+#include <random>
 
 #define LOG(level, fmt, arg...) \
     printf("[" #level "] [%s:%d] " fmt"\n",\
@@ -23,8 +24,19 @@
     } \
 } while(0)
 
-#define INIT_EDGE_VAL 0.01
-#define INIT_EDGE(container) fill(container.begin(), container.end(), INIT_EDGE_VAL)
+
+inline std::default_random_engine& local_random_engine() {
+    static std::default_random_engine engine;
+    return engine;
+}
+
+template<class T>
+inline std::uniform_real_distribution<T>& local_uniform_real_distribution() {
+    static std::uniform_real_distribution<T> distr;
+    return distr;
+}
+
+#define INITIAL_RANGE 0.1
 
 template<class T = double>
 void print_vector(const std::vector<T> v) {
@@ -50,7 +62,6 @@ void matrix_mul(const std::vector<T>& a, const std::vector<std::vector<T> >& b,
         std::vector<T>& ret, std::function<T(T)> _activation_func) {
     size_t row_cnt = b.size();
     size_t col_cnt = b[0].size();
-    // LOG_NOTICE("matrix_mul %d %d", row_cnt, col_cnt);
     for (size_t idx = 0; idx < col_cnt; ++idx) {
         T sum(0);
         for (size_t ridx = 0; ridx < row_cnt; ++ridx) {
@@ -100,7 +111,11 @@ public:
             for (int layer_id = 0; layer_id < nn_layer_num[layer]; ++layer_id) {
                 _layered_graph[layer][layer_id].resize(nn_layer_num[layer + 1]);
                 _delta_graph[layer][layer_id].resize(nn_layer_num[layer + 1]);
-                INIT_EDGE(_layered_graph[layer][layer_id]);
+                for (int i = 0; i < nn_layer_num[layer + 1]; ++i) {
+                    _layered_graph[layer][layer_id][i] =
+                        (local_uniform_real_distribution<double>()(local_random_engine()) * 2 - 1)
+                        * INITIAL_RANGE;
+                }
             }
         }
         return 0;
@@ -136,7 +151,6 @@ public:
                 }
                 return ret;
             };
-            // LOG_NOTICE("Train single");
             train_single(convert_food(food.input, _layer_act[0].size()), 
                     convert_food(food.output, _layer_act[_layer_cnt - 1].size()));
         }
