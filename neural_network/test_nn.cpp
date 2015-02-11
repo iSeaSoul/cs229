@@ -22,7 +22,7 @@ int main() {
     nn.add_training_data(std::vector<int>{0}, std::vector<int>{0});
     nn.add_training_data(std::vector<int>{0, 1}, std::vector<int>{0});
     nn.add_training_data(std::vector<int>{0, 2}, std::vector<int>{0});
-    nn.add_training_data(std::vector<int>{1}, std::vector<int>{0});
+    // nn.add_training_data(std::vector<int>{1}, std::vector<int>{1});
     nn.add_training_data(std::vector<int>{2}, std::vector<int>{1});
     // nn.add_training_data(std::vector<int>{0, 1, 2}, std::vector<int>{1});
 
