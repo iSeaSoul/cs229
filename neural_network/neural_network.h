@@ -39,7 +39,7 @@ inline double real_random_generator() {
     return local_uniform_real_distribution<double>()(local_random_engine());
 }
 
-const double INITIAL_RANGE = 0.1;
+const double INITIAL_RANGE = 0.001;
 
 template <class T = double>
 void print_vector(const std::vector<T> v) {
@@ -92,7 +92,7 @@ public:
 
     }
 
-    int create(int input_num, std::vector<int> hidden_num, int output_num) {
+    void create(int input_num, std::vector<int> hidden_num, int output_num) {
         std::vector<int> nn_layer_num{input_num};
         for (const int num : hidden_num) {
             nn_layer_num.push_back(num);
@@ -122,21 +122,19 @@ public:
                 }
             }
         }
-        return 0;
     }
 
-    int train_single(std::vector<T> input, std::vector<T> output) {
+    void train_single(std::vector<T> input, std::vector<T> output) {
         _layer_act[0] = std::move(input);
         forward();
         back_propagate(std::move(output));
-        return 0;
     }
 
     void clear_training_data() {
         _training_data.clear();
     }
 
-    int add_training_data(std::vector<int> input, std::vector<int> output) {
+    void add_training_data(std::vector<int> input, std::vector<int> output) {
         _training_data.push_back(food_t{input, output});
     }
 
@@ -166,13 +164,13 @@ public:
                 }
             }
         }
+        return 0;
     }
 
-    int query(std::vector<int> input, std::vector<T>& output) {
+    void query(std::vector<int> input, std::vector<T>& output) {
         convert_input(input);
         forward();
         output = _layer_act[_layer_cnt - 1];
-        return 0;
     }
 
     void convert_input(std::vector<int> input) {
@@ -223,7 +221,7 @@ public:
         }
     }
 
-    int set_activation_func(std::function<T(T)> func) {
+    void set_activation_func(std::function<T(T)> func) {
         _activation_func = func;
     }
     void set_deactivation_func(std::function<T(T)> func) {
